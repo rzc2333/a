@@ -93,7 +93,7 @@ jobs:
       - name: Switch to relevant branch
         env:
           PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
-        run: bash get_pr.sh
+        run: bash ./get_pr.sh
 
       # - name: Setup GCC
       #   uses: egor-tensin/setup-gcc@v1
