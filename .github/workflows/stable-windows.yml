@@ -52,10 +52,10 @@ jobs:
       - name: Switch to relevant branch
         env:
           PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
-        run: ./get_pr.sh
+        run: bash get_pr.sh
 
       - name: Clone VSCode repo
-        run: ./get_repo.sh
+        run: bash get_repo.sh
 
       - name: Check PR or cron
         env:
@@ -79,7 +79,7 @@ jobs:
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
       RELEASE_VERSION: ${{ needs.check.outputs.RELEASE_VERSION }}
-      SHOULD_BUILD: ${{ (needs.check.outputs.SHOULD_BUILD == 'yes' || github.event.inputs.generate_assets == 'true') && 'yes' || 'no' }}
+      SHOULD_BUILD: 'yes'
       VSCODE_ARCH: 'x64'
     outputs:
       BUILD_SOURCEVERSION: ${{ env.BUILD_SOURCEVERSION }}
@@ -93,7 +93,7 @@ jobs:
       - name: Switch to relevant branch
         env:
           PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
-        run: bash ./get_pr.sh
+        run: bash get_pr.sh
 
       # - name: Setup GCC
       #   uses: egor-tensin/setup-gcc@v1
@@ -118,14 +118,14 @@ jobs:
       #   if: env.SHOULD_BUILD == 'yes'
 
       - name: Clone VSCode repo
-        run: ./get_repo.sh
+        run: bash get_repo.sh
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Build
         env:
           SHOULD_BUILD_REH: 'no'
           SHOULD_BUILD_REH_WEB: 'no'
-        run: ./build.sh
+        run: bash build.sh
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Compress vscode artifact
@@ -179,7 +179,7 @@ jobs:
       - name: Switch to relevant branch
         env:
           PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
-        run: ./get_pr.sh
+        run: bash get_pr.sh
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Setup Node.js environment
@@ -198,7 +198,7 @@ jobs:
         env:
           DISABLE_MSI: ${{ vars.DISABLE_STABLE_MSI }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./check_tags.sh
+        run: bash check_tags.sh
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Download vscode artifact
@@ -212,11 +212,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           npm_config_arch: ${{ matrix.vscode_arch }}
           npm_config_target_arch: ${{ matrix.vscode_arch }}
-        run: ./build/windows/package.sh
+        run: bash ./build/windows/package.sh
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Prepare assets
-        run: ./prepare_assets.sh
+        run: bash prepare_assets.sh
         if: env.SHOULD_BUILD == 'yes' && (env.SHOULD_DEPLOY == 'yes' || github.event.inputs.generate_assets == 'true')
 
       - name: Upload unsigned artifacts
@@ -246,13 +246,13 @@ jobs:
         if: env.SHOULD_BUILD == 'yes' && (env.SHOULD_DEPLOY == 'yes' || github.event.inputs.generate_assets == 'true')
 
       - name: Prepare checksums
-        run: ./prepare_checksums.sh
+        run: bash prepare_checksums.sh
         if: env.SHOULD_BUILD == 'yes' && (env.SHOULD_DEPLOY == 'yes' || github.event.inputs.generate_assets == 'true')
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./release.sh
+        run: bash release.sh
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
       - name: Update versions repo
@@ -260,7 +260,7 @@ jobs:
           FORCE_UPDATE: ${{ github.event.inputs.force_version }}
           GITHUB_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
           GITHUB_USERNAME: ${{ github.repository_owner }}
-        run: ./update_version.sh
+        run: bash update_version.sh
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
       - name: Upload assets
@@ -287,7 +287,7 @@ jobs:
           ref: ${{ env.GITHUB_BRANCH }}
 
       - name: Check version
-        run: ./stores/winget/check_version.sh
+        run: bash ./stores/winget/check_version.sh
         env:
           RELEASE_VERSION: ${{ needs.build.outputs.RELEASE_VERSION }}
 
