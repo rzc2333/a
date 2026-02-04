@@ -218,3 +218,5 @@ The minimal version is limited by the core component Electron, you may want to c
 ## <a id="license"></a>License
 
 [MIT](https://github.com/VSCodium/vscodium/blob/master/LICENSE)
+
+galgame的专家，柚子社千恋万花，屏幕里的那个她，这才不是黄油啦
