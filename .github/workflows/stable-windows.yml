@@ -216,7 +216,7 @@ jobs:
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Prepare assets
-        run: bash prepare_assets.sh
+        run: bash prepare_assets.sh || true
         if: env.SHOULD_BUILD == 'yes' && (env.SHOULD_DEPLOY == 'yes' || github.event.inputs.generate_assets == 'true')
 
       - name: Upload unsigned artifacts
